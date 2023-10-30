@@ -4,8 +4,8 @@ This is a machine learning project for the class Seng474. We intend to experimen
 
 ### Todo
 
-- [~] Get the data
-- [~] Write the env
+- [x] Get the data
+- [x] Write the env
 - [ ] Train the robot
 - [ ] Interpretability?
 
