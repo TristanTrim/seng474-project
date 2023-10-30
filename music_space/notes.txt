@@ -1,0 +1,25 @@
+Diagram Notes
+
+	song is a vector
+	corresponds to its songID
+	want to link Millon Song Suber with User taste by songID
+		inner join(MSS, songID)
+
+vec2song(song_vector):
+	
+	return the song id given a song_vec
+	
+song2vec(songID):
+	return the song vec given the SONGID
+	
+nearest_neighbour(song_vec)
+
+	return the nearest neighbour of the song vector provided
+		when we look at the nearest neighbour of a song vector
+		we want to minimize the number of nearest neighbours
+		
+	Idea: use sklearn.neighbors
+	sklearn.neighbors.KDTREE
+
+
+cost_song_per(song vector)
