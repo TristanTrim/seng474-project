@@ -12,7 +12,7 @@
 ######################################################
 
 
-def sarsa_loop(environment, num_episodes=100, alpha=0.1, gamma=0.5, epsilon=0.1):
+def sarsa_loop(environment, training_rounds=100, alpha=0.1, gamma=0.5, epsilon=0.1):
 
     # Initialize Q-values
     q_table = {}
