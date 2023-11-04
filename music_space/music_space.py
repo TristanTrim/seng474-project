@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 class MusicSpace:
 
     def __init__(self, title):
-        self.feature_vectors = np.load('embeddings/' + title + '_music_space.npy')
-        self.song_IDs = np.load('embeddings/' + title + '_song_ID_space.npy', allow_pickle=True)
+        self.feature_vectors = np.load('embeddings/MSD_features.npy')
+        self.song_IDs = np.load('embeddings/MSD_song_IDs.npy', allow_pickle=True)
         self.KD_TREE = KDTree(data= self.feature_vectors, leaf_size= 1) #tune leaf size??
 
     def vector_to_songID(self, song_vector):
@@ -36,19 +36,5 @@ class MusicSpace:
         print(f"distance = {dist[0][1]}")
         return(self.feature_vectors[index[0][1]])
 
-#Example Usage
 
-#initialize music space
-t0 = time.time()
-title = 'v1' #using the first music space version
-MS = MusicSpace(title) #initialize the space
-print(f"initialization time: {time.time() - t0}")
-
-
-#Try a nearest Neighbour query on the 4th song in the music space
-X1 = MS.feature_vectors[3]
-
-t0 = time.time()
-MS.NN(X1)
-print(f"kNN query time: {time.time() - t0}")
 

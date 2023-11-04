@@ -1,51 +1,41 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import pandas as pd
+import numpy as np
 
-def process(entp_file, output_dir):
+
+
+def process(entp_file):
     """
-        Process ENTP text file, retrieve all distinct song IDs (sid.txt) and user IDs (uid.txt)
+        This function extracts the raw song id, user id, score triplets.
+            - Only the triplets whose song id is found in the million song subset are kept
+            - the resulting dataset is stored at user_taste/data/user_taste.npy
+
         
-         Parameters:
-             
-            - input_file (str): The path to the input file ('train_triplets.txt') 
-              containing the data to process.
-              
-            - output_dir (str): The directory where the processed data files 
-              will be saved.
-              
-          Note:
-              
-            - train_triplets.txt stores entire ENTP dataset: rows containing user id, song id, and score, corresponding to the number of listens
-              a user has listened to a song. There are 1M+ users, and 300,000+ song IDs from the Million Song Dataset,
-              and a total of 40,000,000+ lines in ENTP. function is intended for use with train_triplets.txt only.
-              
-            - sid.txt is intended for use in populating the music space with songs assigned scores in ENTP.
-              
-            - Ensure that the 'output_dir' directory exists and is writable.
-            
-        """
-    
+    """
     # retrieve unique user and song id's
-    uid_set=set()
-    sid_set=set()
+    user_taste = []
+    scores = []
 
-    with open(entp_file,'r') as input_file:
+    MSD_song_ids = np.load('../music_space/embeddings/MSD_song_IDs.npy')
+    MSD_song_ids = MSD_song_ids.astype(str)  # Convert MSD_song_ids to string type
+
+    i = 1
+    with open(entp_file, 'r') as input_file:
+
         for line in input_file:
-            uid,sid,_ = line.strip().split()
-            uid_set.add(uid)
-            sid_set.add(sid)
-    
 
-    # write to files
-    with open(output_dir+"uid.txt","w") as output_file:
-        for uid in uid_set:
-            output_file.write(uid + '\n')
-            
-    with open(output_dir+"sid.txt","w") as output_file:
-         for sid in sid_set:
-             output_file.write(sid + '\n')
-        
-    return
+            uid, sid, score = line.strip().split()
+            user_taste.append([uid, sid, score])
+            scores.append(score)
 
+            print(f"processed = {i}")
+            i+=1
+            #this was implemented because creating the whole dataset will 2 hours or so...
+            if i == 100000:
+                break
     
-    
+    user_taste = np.array(user_taste)
+    user_taste = user_taste[np.isin(user_taste[:, 1], MSD_song_ids)]
+    np.save(file = 'data/user_taste.npy',arr = user_taste)
+

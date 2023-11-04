@@ -19,23 +19,24 @@ def grab_song(path, row_ID):
     song_file = h5.open_h5_file_read(path)
 
     song_ID = h5.get_song_id(song_file)
-    X = np.array(
-        [
-            h5.get_danceability(song_file),
-            h5.get_energy(song_file),
-            h5.get_key(song_file),
-            h5.get_mode(song_file),
-            h5.get_tempo(song_file) 
-        ]
-        )
+    X = np.array(h5.get_segments_start(song_file)[:100])
+    # X = np.array(
+    #     [
+    #         h5.get_danceability(song_file),
+    #         h5.get_energy(song_file),
+    #         h5.get_key(song_file),
+    #         h5.get_mode(song_file),
+    #         h5.get_tempo(song_file) 
+    #     ]
+    #     )
         
-    X = np.concatenate(
-        (
-            X,
-            np.array(h5.get_segments_start(song_file)[:100])
-        ),
-        axis=0
-    )
+    # X = np.concatenate(
+    #     (
+    #         X,
+    #         np.array(h5.get_segments_start(song_file)[:100])
+    #     ),
+    #     axis=0
+    # )
 
     song_file.close()
     return [song_ID, X]
@@ -45,7 +46,7 @@ def num_features():
     return grab_song("MillionSongSubset\B\D\A\TRBDAID128F92E88C6.h5", 0)[1].shape[0]
     
 
-def initialize_music_space(title = "simple"):
+def initialize_music_space():
 
     """
     1. Initialize and save the music space to music_space/embedding.
@@ -76,28 +77,30 @@ def initialize_music_space(title = "simple"):
                 for song_file_path in os.listdir(gg_child):
         
                     song_ID, X = grab_song(path= gg_child + '/' + song_file_path, row_ID=processed)
-
+                    
+                    #convert the songID from numpy.bytes to string
+                    song_ID = song_ID.decode("UTF-8")
                     if len(X) == d:
                         music_space.append(X)
                         song_IDs.append(song_ID)
                     processed += 1
 
                     print(f"songs processed: {processed}",end='\r')
+                
 
-                    break
 
     song_IDs = np.array(song_IDs)
     music_space = np.array(music_space)
 
     np.save(
-        file = os.getcwd() + '/embeddings/' + title + "_music_space",
+        file = os.getcwd() + '/embeddings/MSD_features',
         arr = music_space
         )
 
     np.save(
-        file = os.getcwd() + '/embeddings/' + title + "_song_ID_space",
+        file = os.getcwd() + '/embeddings/MSD_song_IDs',
         arr = song_IDs
         )
 
 
-initialize_music_space("v1")
+initialize_music_space()

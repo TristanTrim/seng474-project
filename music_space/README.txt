@@ -13,4 +13,5 @@ Two scripts implemented:
 TODO:
 	Test efficiency of neareast neighbours as dimensions increase
 		fast with 105 dimensions
-	 
+
+
