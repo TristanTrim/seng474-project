@@ -10,7 +10,8 @@ class GameEngine():
     # game engine initialization
 
     def __init__(self,
-            agent=None, tastes_set=None, music_space=None
+            agent=None, tastes_set=None, music_space=None,
+            testmode=False
             ):
 
         # properties
@@ -18,6 +19,9 @@ class GameEngine():
         self.agent = None
         self.tastes_set = None
         self.music_space = None
+
+        self.testmode = testmode
+        if testmode: return
 
         # set modules from input or default
 
@@ -50,7 +54,10 @@ class GameEngine():
     # meat and potatoes
     # ( code for actually doing stuff ) 
 
-    def run_game(self, stop_condition, stop_mode="num_game_rounds"):
+    def run_game(self, stop_condition=10, stop_mode="num_game_rounds"):
+
+        if self.testmode:
+            return([("sandstorm", 9001), ("never gonna give you up", -777)])
 
         user = self.tastes_set.user_taste()
 

@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import os
+import sys
 
 from user_taste import entp_reader
 
@@ -25,7 +28,14 @@ def setup():
     else:
         print("Already setup. Did nothing.")
 
+def clean():
+    os.remove("data/*")
 
 if __name__=="__main__":
-    setup()
+
+    if sys.argv[1] == "clean":
+        clean()
+
+    else:
+        setup()
 
