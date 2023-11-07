@@ -79,8 +79,8 @@ class GameEngine():
     def _run_game_round(self, round_history, user):
         
         song_rec_vec = self.agent.get_next_recommendation( round_history )
-        song_rec_sid = self.music_space.vec2song( song_rec_vec )
-        song_score = self.user.get_score( song_rec_sid )
+        song_rec_sid = self.music_space.vector_to_songID( song_rec_vec )
+        song_score = self.user.get_song_score( song_rec_sid )
 
         return( song_rec_vec, song_score )
 
