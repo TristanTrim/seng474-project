@@ -17,7 +17,7 @@ def process(entp_file):
     user_taste = []
     scores = []
 
-    MSD_song_ids = np.load('../music_space/embeddings/MSD_song_IDs.npy')
+    MSD_song_ids = np.load('../music_space/embeddings/npy/MSD_song_IDs_2.npy')
     MSD_song_ids = MSD_song_ids.astype(str)  # Convert MSD_song_ids to string type
 
     i = 1
@@ -32,10 +32,11 @@ def process(entp_file):
             print(f"processed = {i}")
             i+=1
             #this was implemented because creating the whole dataset will 2 hours or so...
-            if i == 100000:
+            if i == 1000000:
                 break
     
     user_taste = np.array(user_taste)
     user_taste = user_taste[np.isin(user_taste[:, 1], MSD_song_ids)]
     np.save(file = 'data/user_taste.npy',arr = user_taste)
 
+process("data/train_triplets.txt")

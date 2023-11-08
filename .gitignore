@@ -1,6 +1,8 @@
 data/*
 */__pycache__
 
+
 music_space/MillionSongSubset/
 music_space/embeddings/csv/
 music_space/embeddings/npy/
+user_taste/data
