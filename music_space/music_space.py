@@ -3,7 +3,7 @@ from sklearn.neighbors import KDTree
 import time
 import matplotlib.pyplot as plt
 
-class MusicSpace:
+class music_space:
 
     def __init__(self, title):
         self.feature_vectors = np.load('embeddings/MSD_features.npy')
