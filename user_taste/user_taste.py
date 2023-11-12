@@ -66,5 +66,6 @@ def user_histories():
     plt.title(f"Songs rated per user (users = {num_users})")
     plt.show()
 
-user_histories()
+if __name__=="__main__":
+    user_histories()
     
