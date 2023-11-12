@@ -48,13 +48,17 @@ def setup():
             ):
 
         initialize_music_space(mode=1)
-    initialize_music_space(mode=2)
-    quit()
+    if not os.path.exists("embeddings/MSD_features.npy"):
+        os.system("cp embeddings/npy/MSD_features_1.npy embeddings/MSD_features.npy")
+
+    if not os.path.exists("embeddings/MSD_song_IDs.npy"):
+        os.system("cp embeddings/npy/MSD_song_IDs_1.npy embeddings/MSD_song_IDs.npy")
 
     os.chdir("..")
 
 
     ## download and process user taste dataset
+    print("# user taste data")
 
     os.chdir("./user_taste/data")
 
