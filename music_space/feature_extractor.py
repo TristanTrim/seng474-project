@@ -1,4 +1,4 @@
-import hdf5_getters as h5
+import music_space.hdf5_getters as h5
 import numpy as np
 
 

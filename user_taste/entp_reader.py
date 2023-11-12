@@ -39,4 +39,5 @@ def process(entp_file):
     user_taste = user_taste[np.isin(user_taste[:, 1], MSD_song_ids)]
     np.save(file = 'data/user_taste.npy',arr = user_taste)
 
-process("data/train_triplets.txt")
+if __name__=="__main__":
+    process("data/train_triplets.txt")

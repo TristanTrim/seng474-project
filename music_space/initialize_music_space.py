@@ -1,8 +1,9 @@
-import hdf5_getters as h5
+import music_space.hdf5_getters as h5
 import numpy as np
 import os
 import csv
-from feature_extractor import *
+from music_space.feature_extractor import *
+from tqdm import tqdm
 
 
 def list_song_files():
@@ -61,7 +62,8 @@ def initialize_music_space(mode = 2):
     if mode == 2:
         all_terms = np.load(file = "embeddings/npy/term_list.npy",allow_pickle=True)
 
-    for song_file_path in list_song_files():
+    print("Processing songs:")
+    for song_file_path in tqdm(list_song_files()):
 
         if mode == 1:
             song_ID, X = extractor_1(path = song_file_path)
@@ -72,9 +74,11 @@ def initialize_music_space(mode = 2):
         music_space.append(X)
         song_IDs.append(song_ID)
         processed += 1
-        print(f"{processed} songs processed")
-        
 
+    if not os.path.exists( "embeddings" ):     os.mkdir("embeddings")
+    if not os.path.exists( "embeddings/csv" ): os.mkdir("embeddings/csv")
+    if not os.path.exists( "embeddings/npy" ): os.mkdir("embeddings/npy")
+    
 
     csv_file = f'embeddings/csv/MSD_songs_{mode}.csv'
     csv_ids_file = f'embeddings/csv/MSD_IDs_{mode}.csv'
@@ -95,6 +99,6 @@ def initialize_music_space(mode = 2):
     np.save(file = os.getcwd() +'/'+ npy_ids_file,arr = song_IDs)
 
 
-
-initialize_music_space(mode=2)
+if __name__=="__main__":
+    initialize_music_space(mode=2)
 
