@@ -1,14 +1,16 @@
 import numpy as np
 from sklearn.neighbors import KDTree
-import time
+import random
 import matplotlib.pyplot as plt
+import csv
 
 class music_space:
 
-    def __init__(self, title):
-        self.feature_vectors = np.load('embeddings/MSD_features.npy')
-        self.song_IDs = np.load('embeddings/MSD_song_IDs.npy', allow_pickle=True)
-        self.KD_TREE = KDTree(data= self.feature_vectors, leaf_size= 1) #tune leaf size??
+    def __init__(self, path):
+        self.feature_vectors = np.load(path + "MSD_features_2.npy")
+        self.__select_frequent_terms()
+        self.song_IDs = np.load(path + "MSD_song_IDs_2.npy", allow_pickle=True)
+        self.KD_TREE = KDTree(data= self.feature_vectors, leaf_size= 1,metric=) #tune leaf size??
 
     def vector_to_songID(self, song_vector):
         """returns the song_ID for the given song_vector"""
@@ -35,6 +37,18 @@ class music_space:
         dist, index = self.KD_TREE.query(X = song_vector.reshape(1,-1), k = 2)
         print(f"distance = {dist[0][1]}")
         return(self.feature_vectors[index[0][1]])
+    
+    def __select_frequent_terms(self):
+        with open('music_space/embeddings/term_frequency.csv', 'r', newline='') as file:
+            reader = csv.reader(file)
+            D = [int(row[0]) for row in reader]
+            self.feature_vectors = self.feature_vectors[:, D[:40]]
+            
+
+    def get_random_song(self):
+        i = random.randint(0,self.feature_vectors.shape[0]-1)
+        return self.song_IDs[i]
+
 
 
 

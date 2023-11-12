@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+
 """
 Implementation of user taste module
 
@@ -13,8 +15,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 class user_taste():
 
-    def __init__(self):
-        self.taste_space = np.load('data/user_taste.npy')
+    def __init__(self,path):
+        self.taste_space = np.load(path + 'user_taste.npy')
         self.taste_dictionary = self.__init_taste_dictionary()
 
 
@@ -48,23 +50,3 @@ class user_taste():
         return set(self.taste_space[:,0])
         
 
-def user_histories():
-    U = user_taste()
-    ratings_count = []
-    num_users = 0
-    for user in U.get_all_users():
-        user = U.get_rand_user()
-        history = U.get_listening_history(user)
-        if history is not None and history.shape[0] >= 5 and history.shape[0] <= 15:
-            ratings_count.append(history.shape[0])
-            num_users+=1
-
-    plt.hist(ratings_count,bins=10)
-    plt.ylabel("number of songs rated")
-    plt.xlim(5,15)
-    plt.ylim(top = 600)
-    plt.title(f"Songs rated per user (users = {num_users})")
-    plt.show()
-
-user_histories()
-    
