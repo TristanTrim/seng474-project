@@ -45,9 +45,6 @@ def extractor_2(path,TERMS_SET):
             X.append(0)
 
 
-        
-            
-
     sid = h5.get_song_id(song_file)
     song_file.close()
     return [sid, X]
