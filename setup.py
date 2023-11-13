@@ -5,9 +5,9 @@ import os
 import sys
 
 from user_taste import entp_reader
-from music_space.initialize_music_space import initialize_music_space
+from music_space.initialize_music_space import initialize_music_space, get_all_artist_terms
 
-def setup():
+def setup(mode = 1):
 
     did_something = False
 
@@ -41,13 +41,17 @@ def setup():
     print("# initializing music space")
 
     if (
-            (not os.path.exists("embeddings/csv/MSD_IDs_1.csv") )
-            or (not os.path.exists("embeddings/csv/MSD_songs_1.csv") )
-            or (not os.path.exists("embeddings/npy/MSD_features_1.npy") )
-            or (not os.path.exists("embeddings/npy/MSD_song_IDs_1.npy") )
+            (not os.path.exists(f"embeddings/csv/MSD_IDs_{mode}.csv") )
+            or (not os.path.exists(f"embeddings/csv/MSD_songs_{mode}.csv") )
+            or (not os.path.exists(f"embeddings/npy/MSD_features_{mode}.npy") )
+            or (not os.path.exists(f"embeddings/npy/MSD_song_IDs_{mode}.npy") )
             ):
 
-        initialize_music_space(mode=1)
+        if mode == 2:
+            get_all_artist_terms()
+
+        initialize_music_space(mode)
+
     if not os.path.exists("embeddings/MSD_features.npy"):
         os.system("cp embeddings/npy/MSD_features_1.npy embeddings/MSD_features.npy")
 
@@ -95,5 +99,5 @@ if __name__=="__main__":
         clean()
 
     else:
-        setup()
+        setup(mode=2)
 
