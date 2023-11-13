@@ -34,7 +34,7 @@ class music_space:
     def NN(self, song_vector):
         """returns the nearest neighbour of a song vector"""
 
-        dist, index = self.KD_TREE.query(X = song_vector.reshape(1,-1), k = 2)
+        dist, index = self.KD_TREE.query(X = song_vector.reshape(1,-1), k = 1)
         print(f"distance = {dist[0][1]}")
         return(self.feature_vectors[index[0][1]])
     
