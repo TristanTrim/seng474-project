@@ -9,10 +9,10 @@ NOTE: This module requires the user taste dataset to be available. This file can
 
 
 """
-
-from numpy.random import randint
 import numpy as np 
+from numpy.random import randint
 import matplotlib.pyplot as plt
+
 class user_taste():
 
     def __init__(self,path):
@@ -34,8 +34,13 @@ class user_taste():
     def get_song_score(self,uid,sid):
         """return the score given a user id (uid) and song id (sid)"""
 
-        return self.taste_dictionary[(uid,sid)]
+        listening_history = self.get_listening_history(uid)
+        for song in list(listening_history[:, 1]):
+            if song == sid:
+                return self.taste_dictionary[(uid,sid)]
 
+        return 0
+    
     def get_rand_user(self):
         """returns the user id (uid) of a random user in the user taste dataframe"""
     
@@ -43,6 +48,7 @@ class user_taste():
         return self.taste_space[i,0]
     
     def get_listening_history(self,uid):
+        """return all the songs which a given user has listened to"""
         uid_records = self.taste_space[:,0] == uid
         return self.taste_space[uid_records]
 
@@ -50,24 +56,5 @@ class user_taste():
         return set(self.taste_space[:,0])
         
 
-def user_histories():
-    U = user_taste()
-    ratings_count = []
-    num_users = 0
-    for user in U.get_all_users():
-        user = U.get_rand_user()
-        history = U.get_listening_history(user)
-        if history is not None and history.shape[0] >= 5 and history.shape[0] <= 15:
-            ratings_count.append(history.shape[0])
-            num_users+=1
 
-    plt.hist(ratings_count,bins=10)
-    plt.ylabel("number of songs rated")
-    plt.xlim(5,15)
-    plt.ylim(top = 600)
-    plt.title(f"Songs rated per user (users = {num_users})")
-    plt.show()
 
-if __name__=="__main__":
-    user_histories()
-    

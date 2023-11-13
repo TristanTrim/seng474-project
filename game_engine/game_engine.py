@@ -78,10 +78,9 @@ class GameEngine():
             raise Exception(f"Unrecognised stop_mode: {stop_mode}")
 
     def _run_game_round(self, round_history, user):
-        
         song_rec_vec = self.agent.get_next_recommendation( round_history )
         song_rec_sid = self.music_space.vector_to_songID( song_rec_vec.detach().numpy() )
         song_score = self.tastes_set.get_song_score( user, song_rec_sid )
-
         return( song_rec_vec, song_score )
+    
 
