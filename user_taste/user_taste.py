@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+
 """
 Implementation of user taste module
 
@@ -13,8 +15,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 class user_taste():
 
-    def __init__(self):
-        self.taste_space = np.load('data/user_taste.npy')
+    def __init__(self,path):
+        self.taste_space = np.load(path + 'user_taste.npy')
         self.taste_dictionary = self.__init_taste_dictionary()
 
 
