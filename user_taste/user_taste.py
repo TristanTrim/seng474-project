@@ -32,7 +32,9 @@ class user_taste():
         return taste_dictionary
 
     def get_song_score(self,uid,sid):
-        """return the score given a user id (uid) and song id (sid)"""
+        """return the score given a user id (uid) and song id (sid)
+        Dont use this function
+        """
 
         listening_history = self.get_listening_history(uid)
         for song in list(listening_history[:, 1]):
@@ -55,6 +57,5 @@ class user_taste():
     def get_all_users(self):
         return set(self.taste_space[:,0])
         
-
 
 

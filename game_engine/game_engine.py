@@ -5,6 +5,7 @@
 Implementation of user game engine module
 """
 
+from user_taste.user import USER
 class GameEngine():
 
     # game engine initialization
@@ -54,13 +55,14 @@ class GameEngine():
     # meat and potatoes
     # ( code for actually doing stuff ) 
 
-    def run_game(self, stop_condition=10, stop_mode="num_game_rounds"):
+    def run_game(self, stop_condition=100, stop_mode="num_game_rounds"):
 
         if self.testmode:
             return([("sandstorm", 9001), ("never gonna give you up", -777)])
 
-        user = self.tastes_set.get_rand_user()
-        print(f"running game with user {user} (don't tell the agent)")
+        uid = self.tastes_set.get_rand_user()
+        user = USER(uid,self.music_space,self.tastes_set)
+        print(f"running game with user {uid} (don't tell the agent)")
 
         round_history = []
 
@@ -79,8 +81,7 @@ class GameEngine():
 
     def _run_game_round(self, round_history, user):
         song_rec_vec = self.agent.get_next_recommendation( round_history )
-        song_rec_sid = self.music_space.vector_to_songID( song_rec_vec.detach().numpy() )
-        song_score = self.tastes_set.get_song_score( user, song_rec_sid )
-        return( song_rec_vec, song_score )
-    
+        
+        song_score = user.get_song_score(song_rec_vec.detach().numpy())
+        return (song_rec_vec, song_score)
 
