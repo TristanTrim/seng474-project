@@ -53,5 +53,24 @@ def process(entp_file):
 
     np.save(file = 'data/user_taste.npy',arr = user_taste)
 
+def sort_by_num_ratings():
+    # get a sorted array of user id's and rating counts
+    
+    user_taste = np.load('data/user_taste.npy')
+    uid = user_taste[:,:1]
+    uid,counts = np.unique(uid,return_counts=True) # get unique uids and count of ratings
+
+    sorted_inds = np.argsort(counts)[::-1] #sort by decreasing count 
+     
+    counts = counts[sorted_inds].astype(str)
+    uid = uid[sorted_inds]
+        
+    rating_counts = np.stack((uid,counts),axis=1)   
+    np.save(file='data/rating_counts.npy',arr = rating_counts)   
+        
+    
+
+
 if __name__=="__main__":
     process("data/train_triplets.txt")
+    sort_by_num_ratings()
