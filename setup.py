@@ -9,7 +9,6 @@ from music_space.initialize_music_space import initialize_music_space, get_all_a
 
 def setup(mode = 1):
 
-    did_something = False
 
     ## setup python virtualenv
 
@@ -78,17 +77,13 @@ def setup(mode = 1):
             (not os.path.exists("./data/user_taste.npy"))
             ):
         print("Processing tastes in ./data/user_taste.npy")
-        did_something = True
         entp_reader.process("./data/train_triplets.txt")
 
     os.chdir("..")
 
     ## all done : )
     
-    if did_something:
-        print("Setup done. Please run python3 main.py.")
-    else:
-        print("Already setup. Did nothing.")
+    print("Setup done. Please run python3 main.py.")
 
 def clean():
     os.remove("data/*")
