@@ -44,7 +44,7 @@ def train(
         round_returns = calc_returns(round_history, gamma)
         if verbose: print(f"=== returns: ===\n{round_returns}\n\n\n")
         
-        loss = game_engine.agent.update_weights( round_returns )
+        loss = game_engine.agent.update_weights( round_returns, alpha )
 
         training_history += [ loss ]
 

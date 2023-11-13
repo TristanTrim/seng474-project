@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import torch as tc
+tc.autograd.set_detect_anomaly(True)
 
 device = (
     "cuda" if tc.cuda.is_available()
@@ -75,7 +76,7 @@ class Agent():
         self._bad_songs_vec = tc.zeros(
                         self._song_vec_len )
 
-    def _update_good_bad( song, score ):
+    def _update_good_bad(self, song, score ):
             if ( score > self.threshold ):
                 # that was a good song
                 self._good_songs_vec += song
@@ -86,14 +87,15 @@ class Agent():
 
     def _get_mu_sig(self):
 
-        output = self._mlp.forward( tc.concat(
-                    (
-                        self._good_songs_vec,
-                        self._bad_songs_vec,
-                    )
-                ))
+        _input = tc.detach( tc.concat(
+                    ( self._good_songs_vec, self._bad_songs_vec, )
+                ) )
+
+ 
+        output = self._mlp.forward(_input)
+
         mu = output[:self._song_vec_len]
-        sig = output[self._song_vec_len:]
+        sig = tc.exp( output[self._song_vec_len:] )
 
         return( mu, sig )
 
@@ -116,7 +118,8 @@ class Agent():
     def update_weights(self, round_returns, alpha ):
 
         self._zero_good_bad_vec()
-        optimizer = torch.optim.SGD(self._mlp.parameters(), lr=alpha)
+        optimizer = tc.optim.SGD(
+                self._mlp.parameters(), lr=alpha)
 
         for song, score, _return in round_returns:
 
@@ -130,12 +133,14 @@ class Agent():
             better_sig = sig * (delta/better_delta)
 
             loss = tc.nn.functional.mse_loss(
-                            tc.concat(mu,sig),
-                            tc.concat(better_mu,better_sig))
+                            tc.concat((mu,sig)),
+                            tc.concat((better_mu,better_sig))
+                            )
+            print(loss)
 
             loss.backward()
-            optimizer.step()
             optimizer.zero_grad()
+            optimizer.step()
             
             self._update_good_bad(song, score)
 
