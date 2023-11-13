@@ -18,7 +18,9 @@ def main():
                     tastes_set = ut,
                     music_space = ms
                     )
-    print( game_engine.run_game() )
+
+    train( game_engine=game_engine,
+            verbose=False )
 
 def test_train():
 
