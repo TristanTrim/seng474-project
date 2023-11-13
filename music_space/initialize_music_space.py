@@ -28,13 +28,12 @@ def list_song_files():
 def get_all_artist_terms():
     terms = set()
     i = 0
-    for song_path in list_song_files():
+    for song_path in tqdm(list_song_files()):
         song = h5.open_h5_file_read(song_path)
         for term in np.char.decode(h5.get_artist_terms(song)):
             terms.add(term)
         song.close()
         i+=1
-        print(i)
     with open('embeddings/csv/term_list.csv', 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(terms)
