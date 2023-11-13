@@ -59,7 +59,8 @@ class GameEngine():
         if self.testmode:
             return([("sandstorm", 9001), ("never gonna give you up", -777)])
 
-        user = self.tastes_set.user_taste()
+        user = self.tastes_set.get_rand_user()
+        print(f"running game with user {user} (don't tell the agent)")
 
         round_history = []
 
@@ -69,7 +70,7 @@ class GameEngine():
             
             for round_number in range(1,stop_condition+1):
                 round_history += [
-                        self._run_game_round(round_history) ]
+                        self._run_game_round(round_history, user) ]
 
             return( round_history )
 
@@ -79,8 +80,8 @@ class GameEngine():
     def _run_game_round(self, round_history, user):
         
         song_rec_vec = self.agent.get_next_recommendation( round_history )
-        song_rec_sid = self.music_space.vector_to_songID( song_rec_vec )
-        song_score = self.user.get_song_score( song_rec_sid )
+        song_rec_sid = self.music_space.vector_to_songID( song_rec_vec.detach().numpy() )
+        song_score = self.tastes_set.get_song_score( user, song_rec_sid )
 
         return( song_rec_vec, song_score )
 

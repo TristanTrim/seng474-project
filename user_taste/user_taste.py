@@ -34,7 +34,7 @@ class user_taste():
     def get_song_score(self,uid,sid):
         """return the score given a user id (uid) and song id (sid)"""
 
-        return self.taste_dictionary[(sid,uid)]
+        return self.taste_dictionary[(uid,sid)]
 
     def get_rand_user(self):
         """returns the user id (uid) of a random user in the user taste dataframe"""

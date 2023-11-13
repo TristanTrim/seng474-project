@@ -10,7 +10,7 @@ class music_space:
         self.feature_vectors = np.load(path + "MSD_features_2.npy")
         self.__select_frequent_terms()
         self.song_IDs = np.load(path + "MSD_song_IDs_2.npy", allow_pickle=True)
-        self.KD_TREE = KDTree(data= self.feature_vectors, leaf_size= 1,metric=) #tune leaf size??
+        self.KD_TREE = KDTree(data= self.feature_vectors, leaf_size=1 ,metric="minkowski") #tune leaf size??
 
     def vector_to_songID(self, song_vector):
         """returns the song_ID for the given song_vector"""
