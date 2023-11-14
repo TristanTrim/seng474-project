@@ -36,7 +36,7 @@ def train(
 
     for round_number in range(1,game_rounds+1):
         
-        round_history = game_engine.run_game()
+        round_history = game_engine.run_game(new_user=False)
         if verbose:
             print(f"=== round {round_number} results: ===")
             print(f"{round_history}\n")

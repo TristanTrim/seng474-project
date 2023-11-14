@@ -95,7 +95,7 @@ class Agent():
         output = self._mlp.forward(_input)
 
         mu = output[:self._song_vec_len]
-        sig = tc.exp( output[self._song_vec_len:] )
+        sig = tc.sigmoid( output[self._song_vec_len:]*1e-6 )*1e3
 
         return( mu, sig )
 
@@ -125,9 +125,12 @@ class Agent():
 
             mu, sig = self._get_mu_sig()
 
-            goodness = _return - self.threshold
+                # Really high score gets close to 1.
+                # Positive scores are move in direction
+                # of predicting that songvec.
+            gb = tc.sigmoid(tc.Tensor((_return,)) - self.threshold)[0]*2-1
             delta = song - mu
-            better_mu = mu + goodness * delta
+            better_mu = mu + gb * delta
 
             better_delta = song - better_mu
             better_sig = sig * (delta/better_delta)
@@ -136,7 +139,7 @@ class Agent():
                             tc.concat((mu,sig)),
                             tc.concat((better_mu,better_sig))
                             )
-            print(loss)
+            print(f"score: {score}, loss: {loss}")
 
             loss.backward()
             optimizer.zero_grad()

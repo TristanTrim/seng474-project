@@ -22,7 +22,7 @@ class USER():
         dist, index = self.KD_TREE.query(X = song_vector.reshape(1,-1), k = 1)
         
 
-        score = int(self.user_history[int(index),2])
+        score = int(self.user_history[int(index),2]) / np.linalg.norm(dist)
         return score
     
 
