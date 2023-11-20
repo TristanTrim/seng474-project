@@ -46,6 +46,9 @@ def setup(mode = 1):
             or (not os.path.exists(f"embeddings/npy/MSD_song_IDs_{mode}.npy") )
             ):
 
+        os.mkdirs("embeddings/csv")
+        os.mkdirs("embeddings/npy")
+
         if mode == 2:
             get_all_artist_terms()
 
