@@ -23,8 +23,8 @@ def setup(mode = 1):
 
     if not os.path.exists("./user_taste/data"):
         print("Creating ./user_taste/data directory")
-        os.system("mkdir ./user_taste/data")
-
+        directory_path = os.path.join("user_taste", "data")
+        os.makedirs(directory_path)
 
     ## download and process music space data
 
@@ -52,6 +52,7 @@ def setup(mode = 1):
         if mode == 2:
             get_all_artist_terms()
 
+        print("TEST")
         initialize_music_space(mode)
 
     if not os.path.exists("embeddings/MSD_features.npy"):
@@ -97,5 +98,5 @@ if __name__=="__main__":
         clean()
 
     else:
-        setup(mode=2)
+        setup(mode=1)
 

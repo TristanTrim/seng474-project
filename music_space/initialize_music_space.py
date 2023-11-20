@@ -74,10 +74,14 @@ def initialize_music_space(mode = 2):
         song_IDs.append(song_ID)
         processed += 1
 
-    if not os.path.exists( "embeddings" ):     os.mkdir("embeddings")
-    if not os.path.exists( "embeddings/csv" ): os.mkdir("embeddings/csv")
-    if not os.path.exists( "embeddings/npy" ): os.mkdir("embeddings/npy")
-    
+    if not os.path.exists( "embeddings" ):
+        os.mkdir("embeddings")
+    if not os.path.exists( "embeddings/csv" ):
+        directory_path = os.path.join("embeddings", "csv")
+        os.makedirs(directory_path) 
+    if not os.path.exists( "embeddings/npy" ):
+        directory_path = os.path.join("embeddings", "npy")
+        os.makedirs(directory_path)
 
     csv_file = f'embeddings/csv/MSD_songs_{mode}.csv'
     csv_ids_file = f'embeddings/csv/MSD_IDs_{mode}.csv'
