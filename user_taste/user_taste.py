@@ -9,15 +9,32 @@ NOTE: This module requires the user taste dataset to be available. This file can
 
 
 """
+
+import user_taste as UT
 import numpy as np 
 from numpy.random import randint
 import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+
+import music_space.music_space from music_space
+
+
 
 class user_taste():
 
     def __init__(self,path):
         self.taste_space = np.load(path + 'user_taste.npy')
         self.taste_dictionary = self.__init_taste_dictionary()
+        self.score_matrix = None
+        """
+        score matrix format:
+            n = number of users
+            m = number of songs
+            the matrix must be n x m:
+            the value at row i, column j is the ith users rating of the jth song
+        """
+        
+
 
 
     def __init_taste_dictionary(self):
@@ -55,7 +72,7 @@ class user_taste():
         return self.taste_space[uid_records]
 
     def get_all_users(self):
-        return set(self.taste_space[:,0])
+        return np.unique(self.taste_space[:,0])
         
 
-
+    
