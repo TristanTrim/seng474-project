@@ -36,13 +36,15 @@ def train(
 
     for round_number in range(1,game_rounds+1):
         
-        round_history = game_engine.run_game()
-        if verbose: print(f"=== round {round_number} results:\n{round_history}")
+        round_history = game_engine.run_game(new_user=False)
+        if verbose:
+            print(f"=== round {round_number} results: ===")
+            print(f"{round_history}\n")
 
         round_returns = calc_returns(round_history, gamma)
-        if verbose: print(f"=== returns:\n{round_returns}")
+        if verbose: print(f"=== returns: ===\n{round_returns}\n\n\n")
         
-        loss = game_engine.agent.update_weights( round_returns )
+        loss = game_engine.agent.update_weights( round_returns, alpha )
 
         training_history += [ loss ]
 

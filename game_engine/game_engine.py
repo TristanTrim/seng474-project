@@ -20,6 +20,7 @@ class GameEngine():
         self.agent = None
         self.tastes_set = None
         self.music_space = None
+        self.uid = None
 
         self.testmode = testmode
         if testmode: return
@@ -55,14 +56,18 @@ class GameEngine():
     # meat and potatoes
     # ( code for actually doing stuff ) 
 
-    def run_game(self, stop_condition=100, stop_mode="num_game_rounds"):
+    def run_game(self,
+                stop_condition=30, stop_mode="num_game_rounds",
+                new_user=True,
+                ):
 
         if self.testmode:
             return([("sandstorm", 9001), ("never gonna give you up", -777)])
 
-        uid = self.tastes_set.get_rand_user()
-        user = USER(uid,self.music_space,self.tastes_set)
-        print(f"running game with user {uid} (don't tell the agent)")
+        if new_user or not self.uid:
+            self.uid = self.tastes_set.get_rand_user()
+        user = USER(self.uid,self.music_space,self.tastes_set)
+        print(f"running game with user {self.uid} (don't tell the agent)")
 
         round_history = []
 
