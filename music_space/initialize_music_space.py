@@ -63,7 +63,7 @@ def initialize_music_space(mode = 2):
             reader = csv.reader(file)
             all_terms = [row[1] for row in reader]
 
-        all_terms = np.array(all_terms[1:])
+        all_terms = np.array(all_terms[1:41])
 
     print("Processing songs:")
     for song_file_path in tqdm(list_song_files()):
