@@ -13,6 +13,11 @@ import timeit
 
 class MC_score_matrix(user_taste):
     
+    '''
+    extension of user_taste to include implementation of score matrix
+    and a key-index mapping
+    '''
+    
     def __init__(self,path,solve=False):
         super().__init__(path)
         self.index_dictionary = self.__get_index_dictionary()
@@ -104,8 +109,8 @@ class MC_score_matrix(user_taste):
         
         print('Solving Matrix Completion Optimization problem...')
         start = timeit.default_timer()
-        problem.solve()  # this takes a while
-        end = timeit.default_number()
+        problem.solve()  # this takes a while (~53 mins)
+        end = timeit.default_timer()
         
         print('Finished')
         print(f'Runtime: {end-start}')
