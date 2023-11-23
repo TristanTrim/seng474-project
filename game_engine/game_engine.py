@@ -11,7 +11,10 @@ class GameEngine():
     # game engine initialization
 
     def __init__(self,
-            agent=None, tastes_set=None, music_space=None,
+            agent=None,
+            tastes_set=None,
+            music_space=None,
+            score_matrix = None,
             testmode=False
             ):
 
@@ -20,6 +23,7 @@ class GameEngine():
         self.agent = None
         self.tastes_set = None
         self.music_space = None
+        self.score_matrix = None
         self.uid = None
 
         self.testmode = testmode
@@ -36,11 +40,17 @@ class GameEngine():
             self.set_tastes_set(tastes_set)
         else:
             raise Exception("No tastes_set given and no default")
+        
 
         if music_space:
             self.set_music_space(music_space)
         else:
             raise Exception("No music_space given and no default")
+        
+        if score_matrix:
+            self.set_score_matrix(score_matrix)
+        else:
+            raise Exception("No score matrix given and no default")
 
     # getters and setters
         
@@ -52,6 +62,9 @@ class GameEngine():
 
     def set_music_space(self, music_space):
         self.music_space = music_space
+
+    def set_score_matrix(self, score_matrix):
+        self.score_matrix = score_matrix
 
     # meat and potatoes
     # ( code for actually doing stuff ) 
@@ -66,7 +79,6 @@ class GameEngine():
 
         if new_user or not self.uid:
             self.uid = self.tastes_set.get_rand_user()
-        user = USER(self.uid,self.music_space,self.tastes_set)
         print(f"running game with user {self.uid} (don't tell the agent)")
 
         round_history = []
@@ -77,16 +89,17 @@ class GameEngine():
             
             for round_number in range(1,stop_condition+1):
                 round_history += [
-                        self._run_game_round(round_history, user) ]
+                        self._run_game_round(round_history, self.uid) ]
 
             return( round_history )
 
         else:
             raise Exception(f"Unrecognised stop_mode: {stop_mode}")
 
-    def _run_game_round(self, round_history, user):
+    def _run_game_round(self, round_history, uid):
+
         song_rec_vec = self.agent.get_next_recommendation( round_history )
-        
-        song_score = user.get_song_score(song_rec_vec.detach().numpy())
+        sid = self.music_space.vector_to_songID(song_rec_vec.detach().numpy())
+        song_score = self.score_matrix.get_song_score( (uid, sid) )
         return (song_rec_vec, song_score)
 

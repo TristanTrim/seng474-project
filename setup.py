@@ -56,10 +56,10 @@ def setup(mode = 2):
         initialize_music_space(mode)
 
     if not os.path.exists("embeddings/MSD_features.npy"):
-        os.system("cp embeddings/npy/MSD_features_1.npy embeddings/MSD_features.npy")
+        os.system(f"cp embeddings/npy/MSD_features_1.npy embeddings/MSD_features.npy")
 
     if not os.path.exists("embeddings/MSD_song_IDs.npy"):
-        os.system("cp embeddings/npy/MSD_song_IDs_1.npy embeddings/MSD_song_IDs.npy")
+        os.system(f"cp embeddings/npy/MSD_song_IDs_1.npy embeddings/MSD_song_IDs.npy")
 
     os.chdir("..")
 
@@ -98,5 +98,5 @@ if __name__=="__main__":
         clean()
 
     else:
-        setup(mode=1)
+        setup(mode=2)
 
