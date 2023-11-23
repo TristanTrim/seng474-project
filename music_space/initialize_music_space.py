@@ -41,7 +41,6 @@ def get_all_artist_terms():
     np.save(file = "embeddings/npy/term_list",arr=np.array(list(terms)))
 
 
-# get_all_artist_terms()
 
 def initialize_music_space(mode = 2):
 
@@ -59,7 +58,12 @@ def initialize_music_space(mode = 2):
     song_IDs = []
     
     if mode == 2:
-        all_terms = np.load(file = "embeddings/npy/term_list.npy",allow_pickle=True)
+        all_terms = None
+        with open('embeddings/term_frequency.csv') as file:
+            reader = csv.reader(file)
+            all_terms = [row[1] for row in reader]
+
+        all_terms = np.array(all_terms[1:])
 
     print("Processing songs:")
     for song_file_path in tqdm(list_song_files()):
@@ -104,4 +108,5 @@ def initialize_music_space(mode = 2):
 
 if __name__=="__main__":
     initialize_music_space(mode=2)
+
 

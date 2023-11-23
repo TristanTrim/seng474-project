@@ -9,6 +9,7 @@ NOTE: This module requires the user taste dataset to be available. This file can
 
 
 """
+<<<<<<< Updated upstream
 
 #import user_taste as UT
 import numpy as np 
@@ -17,9 +18,16 @@ from numpy.random import randint
 #import matplotlib.pyplot as plt
 #from sklearn.cluster import KMeans
 #from music_space.music_space import music_space
+=======
+import user_taste as UT
+import numpy as np 
+from numpy.random import randint
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+import music_space.music_space from music_space
+>>>>>>> Stashed changes
 
 # ^ commented out these modules, cvxpy doesn't like them
-
 
 class user_taste():
 
@@ -34,6 +42,10 @@ class user_taste():
             the matrix must be n x m:
             the value at row i, column j is the ith users rating of the jth song
         """
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
 
 

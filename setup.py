@@ -7,7 +7,7 @@ import sys
 from user_taste import entp_reader
 from music_space.initialize_music_space import initialize_music_space, get_all_artist_terms
 
-def setup(mode = 1):
+def setup(mode = 2):
 
 
     ## setup python virtualenv
@@ -48,7 +48,7 @@ def setup(mode = 1):
 
         os.mkdirs("embeddings/csv")
         os.mkdirs("embeddings/npy")
-
+        
         if mode == 2:
             get_all_artist_terms()
 

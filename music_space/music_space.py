@@ -8,7 +8,6 @@ class music_space:
 
     def __init__(self, path):
         self.feature_vectors = np.load(path + "MSD_features_2.npy")
-        self.__select_frequent_terms()
         self.song_IDs = np.load(path + "MSD_song_IDs_2.npy", allow_pickle=True)
         self.KD_TREE = KDTree(data= self.feature_vectors, leaf_size=1 ,metric="minkowski") #tune leaf size??
 

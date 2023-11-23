@@ -24,18 +24,16 @@ def process(entp_file):
     i = 1
     with open(entp_file, 'r') as input_file:
 
-        num_lines_to_proc = 4000000
-
-        for line in tqdm(input_file, total=num_lines_to_proc):
+        for line in tqdm(input_file, total=44000000):
 
             uid, sid, score = line.strip().split()
             user_taste.append([uid, sid, score])
             scores.append(score)
 
             i+=1
-            #this was implemented because creating the whole dataset will 2 hours or so...
-            if i == num_lines_to_proc:
-                break
+            # #this was implemented because creating the whole dataset will 2 hours or so...
+            # if i == num_lines_to_proc:
+            #     break
     
 
     
