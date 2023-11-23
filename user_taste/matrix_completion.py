@@ -5,20 +5,25 @@
 Implement Exact Matrix Completion to estimate empty entries of score matrix in user_taste module
 """
 
-import cvxpy as cp
 import numpy as np
 from user_taste.user_taste import user_taste
+import timeit
 
     
 
 class MC_score_matrix(user_taste):
     
-    def __init__(self,path):
+    def __init__(self,path,solve=False):
         super().__init__(path)
         self.index_dictionary = self.__get_index_dictionary()
-        self.__init_score_matrix(path)
         
-        self.score_matrix = self.__MC_solve()
+        if solve:
+            self.__init_score_matrix(path)
+            self.score_matrix = self.__MC_solve(path)
+        
+        else:
+            self.score_matrix = np.load(path+'completed_score_matrix.npy')
+        
         
     def get_song_score(self,key):
         '''get song score from matrix'''
@@ -68,10 +73,13 @@ class MC_score_matrix(user_taste):
 
     
     
-    def __MC_solve(self):
+    def __MC_solve(self,path):
+        import cvxpy as cp
+        
         '''set-up and solve optimization problem and constraints for CVX'''
-    
-        X = cp.Variable(self.score_matrix.shape)
+        n,m = self.score_matrix.shape
+        
+        X = cp.Variable(n,m)
         objective = cp.Minimize(cp.atoms.normNuc(X))
         constraints = []
         
@@ -80,14 +88,30 @@ class MC_score_matrix(user_taste):
         nonzero_entries = [(i,j) for (i,j) in zip(I,J)]
         
         # define constraints to optimization problem
-        for (i,j) in nonzero_entries:
-            C = X[i,j] == self.score_matrix[i,j]
-            constraints.append(C)
+        for i in range(n):
+            for j in range(m):
+                if (i,j) in nonzero_entries:
+                    C = X[i,j] == self.score_matrix[i,j]
+                    constraints.append(C)
+                else:
+                    # constraining to positive scores only. Not necessary to obtain solution
+                    C = X[i,j] > 0
+                    constraints.append(C)
+        
         
         problem = cp.Problem(objective,constraints)
         
-        print('Solving Matrix Completion problem:')
+        print('Solving Matrix Completion Optimization problem:')
+        start = timeit.default_timer()
         problem.solve()
+        end = timeit.default_number()
+        
+        print('Finished')
+        print(f'Runtime: {end-start}')
+        print(f'status {problem.status}')
+        print(f'Objective: {problem.value}')
+        
+        np.save(file=path+'completed_score_matrix.npy',arr = X.value) 
         
         return X.value
         
