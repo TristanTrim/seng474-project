@@ -20,6 +20,15 @@ class music_space:
         
         return song_id
 
+    def restrict_to_songs(self, songs):
+        A = self.song_IDs
+        B = songs
+        i = np.in1d(
+                self.song_IDs,
+                songs )
+        self.song_IDs = self.song_IDs[i]
+        self.feature_vectors = self.feature_vectors[i]
+
     def songID_to_vector(self, song_id):
         """returns the song_vector for the given song_id"""
 

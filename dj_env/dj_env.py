@@ -50,7 +50,15 @@ class DJEnv():
         self.set_music_space(music_space)
         self.set_score_matrix(score_matrix)
 
+        # other "setup"
+
         self._song_vec_len = self.music_space.songID_to_vector(self.music_space.get_random_song()).shape[0]# ah ha ha ah >:^D
+        self.music_space.restrict_to_songs(
+                self.score_matrix.get_all_songs() )
+        assert (
+            self.score_matrix.get_all_songs().shape
+            == self.music_space.song_IDs.shape )
+
 
         # env_type
 

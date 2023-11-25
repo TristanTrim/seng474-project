@@ -99,7 +99,7 @@ class MC_score_matrix(user_taste):
         '''get song score from matrix'''
         
         index = self.index_dictionary[key]
-        return self.score_matrix(index)
+        return self.score_matrix[index]
 
     def __init_score_matrix(self,path):
         '''initialize score matrix with given song scores from taste space'''
