@@ -1,4 +1,6 @@
 import numpy as np
+import gym
+from gym import spaces
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -51,12 +53,12 @@ class DJEnv():
 
         # gym properties
 
-        self.action_space = np.arrange(614) # creates an array {0,1,...,614} for each song 
+        self.action_space = spaces.Box(low=0, high=1, shape=(614,), dtype=np.float32) # action 1 for song picked zero for all else ?
 
-        self.observation_space = # Does this require a matrix of all users and songs and if they like the song or not?
+        self.observation_space = spaces.Box(low=-1, high=1, shape=(614,), dtype=np.float32) # -1 for not liked and 1 for liked ?
 
-        # we could probably say (0,35)
-        self.reward_range = (-2.755e-05, 35)
+        # we could probably say (0,35) 
+        self.reward_range = (0, 35)
 
 
     # getters and setters
