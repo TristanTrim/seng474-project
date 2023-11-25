@@ -1,12 +1,17 @@
-import numpy as np
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Implementation of env
 """
+import numpy as np
+from user_taste.user_taste import user_taste, MC_score_matrix
+from music_space.music_space import music_space
+from game_engine.game_engine import GameEngine
+import torch
 
 class DJEnv():
     def __init__(
+            self,
             tastes_set=None,
             music_space=None,
             score_matrix = None,
@@ -17,43 +22,47 @@ class DJEnv():
             #   num_steps, score
             stop_type="num_steps",
             stop_condition=30,
-            song_vec_len = = 40, ## TODO, actual len
+            song_vec_len = 40, ## TODO, actual len
             ):
-
-        # set modules from input or default
-
-        self.set_agent(agent)
-        self.set_tastes_set(tastes_set)
-        self.set_music_space(music_space)
-        self.set_score_matrix(score_matrix)
 
         # properties
         
-        self.agent = None
         self.tastes_set = None
         self.music_space = None
         self.score_matrix = None
     
         self._round_history = []
         self._uid = None
+
         self._env_type = env_type
         self._stop_type = stop_type
         self._stop_condition = stop_condition
+        self._song_vec_len = song_vec_len
+
         self._num_steps = 0
+
+        # set modules from input or default
+
+        self.set_tastes_set(tastes_set)
+        self.set_music_space(music_space)
+        self.set_score_matrix(score_matrix)
+
+        self._song_vec_len = self.music_space.songID_to_vector(self.music_space.get_random_song()).shape[0]# ah ha ha ah >:^D
 
         # env_type
 
-        if (env_type == "sum_of_songvec"):
+        if (self._env_type == "sum_of_songvec"):
             # TODO figure out a reasonable value for
             # or way of calculating _threshold
             self._threshold = 0.9
             self._zero_good_bad_vec()
+            observation_space = self.get_sum_of_songvec()
 
         # gym properties
 
-        self.action_space = np.arrange(614) # creates an array {0,1,...,614} for each song 
+        self.action_space = np.arange(614) # creates an array {0,1,...,614} for each song 
 
-        self.observation_space = # Does this require a matrix of all users and songs and if they like the song or not?
+        self.observation_space = observation_space
 
         # we could probably say (0,35)
         self.reward_range = (-2.755e-05, 35)
@@ -61,24 +70,27 @@ class DJEnv():
 
     # getters and setters
         
-    def set_agent(self, agent):
-        self.agent = agent
-
     def set_tastes_set(self, tastes_set):
+        if tastes_set is None:
+            tastes_set = user_taste("./user_taste/data/")
         self.tastes_set = tastes_set
 
-    def set_music_space(self, music_space):
-        self.music_space = music_space
+    def set_music_space(self, local_var_music_space):
+        if local_var_music_space is None:
+            local_var_music_space = music_space("./music_space/embeddings/npy/")
+        self.music_space = local_var_music_space
 
     def set_score_matrix(self, score_matrix):
+        if score_matrix is None:
+            score_matrix = MC_score_matrix('./user_taste/data/')
         self.score_matrix = score_matrix
 
     # real deal potatoes and meat
 
     def _zero_good_bad_vec(self):
-        self._good_songs_vec = tc.zeros(
+        self._good_songs_vec = torch.zeros(
                         self._song_vec_len )
-        self._bad_songs_vec = tc.zeros(
+        self._bad_songs_vec = torch.zeros(
                         self._song_vec_len )
 
     def _update_good_bad(self, song, score ):
@@ -97,11 +109,18 @@ class DJEnv():
                     ))
                 )
 
+
     def reset(self):
         self.round_history = []
-        if (env_type == "sum_of_songvec"):
+        if (self._env_type == "sum_of_songvec"):
             self._zero_good_bad_vec()
         self._num_steps = 0
+
+        if (self._env_type == "sum_of_songvec"):
+            obs = self.get_sum_of_songvec()
+
+        return(obs)
+
 
     def step(self, action):
 
@@ -119,7 +138,7 @@ class DJEnv():
 
         # calculate the observation, reward, and finished state
 
-        if (env_type == "sum_of_songvec"):
+        if (self._env_type == "sum_of_songvec"):
             self._update_good_bad(song_rec_vec, song_score)
             obs = self.get_sum_of_songvec()
         
