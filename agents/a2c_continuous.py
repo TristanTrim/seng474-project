@@ -6,45 +6,32 @@ import torch.nn as nn
 import ptan
 import numpy as np 
 
-FIRST_HID_SIZE = 32
-SECOND_HID_SIZE = 64
-THIRD_HID_SIZE = 64
-GAMMA = 0.9 # Gamma in general should be between 0.9 and 0.99 (lower value encourages short term thinking)
+HID_SIZE = 128
 
 
 class ModelA2C(nn.Module):
-    def __init__(self, input_shape, act_size):
+
+    def __init__(self, obs_size, act_size):
         super(ModelA2C, self).__init__()
 
-        # Inital Evaluation Head - will later be split into policy and value heads
         self.base = nn.Sequential(
-            nn.Conv2d(input_shape[0], FIRST_HID_SIZE, kernel_size=8, stride=4),
+            nn.Linear(obs_size, HID_SIZE),
             nn.ReLU(),
-            nn.Conv2d(FIRST_HID_SIZE, SECOND_HID_SIZE, kernel_size=4, stride=2),
-            nn.ReLU(),
-            nn.Conv2d(SECOND_HID_SIZE, THIRD_HID_SIZE, kernel_size=3, stride=1),
-            nn.ReLU()
         )
+        self.mu = nn.Sequential(
+            nn.Linear(HID_SIZE, act_size),
+            nn.Tanh(),
+        )
+        self.var = nn.Sequential(
+            nn.Linear(HID_SIZE, act_size),
+            nn.Softplus(),
+        )
+        self.value = nn.Linear(HID_SIZE, 1)
 
-        # Policy Head (Actor) - outputs probabilities for taking each action (beacuse continuous action space output mean and variance)
-        self.policy_mean = nn.Sequential(
-            nn.Linear(THIRD_HID_SIZE, act_size),
-            nn.tanh() # allows for final values between -1 and 1 
-        )
-        self.policy_var = nn.Sequential(
-            nn.Linear(THIRD_HID_SIZE, act_size),
-            nn.Softplus() # allows for only final values above 0
-        )
+    def forward(self, x):
+        base_out = self.base(x)
+        return self.mu(base_out), self.var(base_out), self.value(base_out)
 
-        # Value Head (Critic) - outputs single number that is the value of current state
-        self.value = nn.Sequential(
-            nn.Linear(THIRD_HID_SIZE, 1)
-        )
-
-        # forward function to provide all outputs of the network
-        def forward(self, x):
-            base_out = self.base(x)
-            return self.policy_mean(base_out), self.policy_var(base_out), self.value(base_out)
 
 
 # Agent function based on the following: https://github.com/colinskow/move37/blob/master/actor_critic/a2c_continuous.py#L6
