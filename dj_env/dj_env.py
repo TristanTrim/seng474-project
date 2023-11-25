@@ -1,4 +1,4 @@
-
+import numpy as np
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -89,3 +89,10 @@ class DJEnv():
 
             self._update_good_bad(last_song, last_score)
         
+    # Attributes <- will need to move this up to the innit I think 
+
+    self.action_space = np.arrange(614) # creates an array {0,1,...,614} for each song 
+
+    self.observation_space = # Does this require a matrix of all users and songs and if they like the song or not?
+
+    self.reward_range = (-2.755e-05, 35)
