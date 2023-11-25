@@ -60,7 +60,7 @@ class DJEnv():
             self._threshold = 0.9
             self._zero_good_bad_vec()
             action_shape = self._bad_songs_vec.shape
-            observation_shape = self.get_sum_of_songvec().shape
+            observation_shape = self.get_sum_of_songvec().flatten().shape
 
         # gym properties
 
@@ -123,8 +123,10 @@ class DJEnv():
             self._zero_good_bad_vec()
         self._num_steps = 0
 
+        self._uid = self.tastes_set.get_rand_user()
+
         if (self._env_type == "sum_of_songvec"):
-            obs = self.get_sum_of_songvec()
+            obs = self.get_sum_of_songvec().flatten()
 
         return(obs)
 
@@ -135,7 +137,7 @@ class DJEnv():
 
         # get the score for the recommended song
         song_rec_vec = action
-        sid = self.music_space.vector_to_songID(song_rec_vec.detach().numpy())
+        sid = self.music_space.vector_to_songID(song_rec_vec)
         song_score = self.score_matrix.get_song_score(
                      (self._uid, sid) )
 
@@ -147,7 +149,7 @@ class DJEnv():
 
         if (self._env_type == "sum_of_songvec"):
             self._update_good_bad(song_rec_vec, song_score)
-            obs = self.get_sum_of_songvec()
+            obs = self.get_sum_of_songvec().flatten()
         
         reward = song_score
 
