@@ -24,6 +24,10 @@ class user_taste():
         self.taste_space = np.load(path + 'user_taste.npy')
         self.taste_dictionary = self.__init_taste_dictionary()
         self.score_matrix = None
+
+        self._all_users = np.unique(self.taste_space[:,0])
+        self._all_songs = np.unique(self.taste_space[:,1])
+
         """
         score matrix format:
             n = number of users
@@ -69,10 +73,10 @@ class user_taste():
         return self.taste_space[uid_records]
 
     def get_all_users(self):
-        return np.unique(self.taste_space[:,0])
+        return self._all_users
 
     def get_all_songs(self):
-        return np.unique(self.taste_space[:,1])
+        return self._all_songs
 
 
 
@@ -94,6 +98,25 @@ class MC_score_matrix(user_taste):
         else:
             self.score_matrix = np.load(path+'completed_score_matrix.npy')
         
+    def limit_ind_dict_to_sco_mat(self):
+        kv = list(self.index_dictionary.items())
+        kv = np.array(kv)
+        inds = kv[:,1].astype(int)
+        init = (inds<self.score_matrix.shape).all(1)
+        kv = kv[init]
+
+        dic = dict([
+                ( (x[0,0],x[0,1]), (x[1,0],x[1,1]) )
+                                        for x in kv ])
+
+        self.index_dictionary = dic
+
+        i = np.in1d( self._all_users, kv[:,0,0] )
+        self._all_users = self._all_users[i]
+
+        i = np.in1d( self._all_songs, kv[:,0,1] )
+        self._all_songs = self._all_songs[i]
+
         
     def get_song_score(self,key):
         '''get song score from matrix'''
