@@ -1,4 +1,4 @@
-
+import numpy as np
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -20,6 +20,12 @@ class DJEnv():
             song_vec_len = = 40, ## TODO, actual len
             ):
 
+        # set modules from input or default
+
+        self.set_agent(agent)
+        self.set_tastes_set(tastes_set)
+        self.set_music_space(music_space)
+        self.set_score_matrix(score_matrix)
 
         # properties
         
@@ -35,20 +41,23 @@ class DJEnv():
         self._stop_condition = stop_condition
         self._num_steps = 0
 
-        # set modules from input or default
-
-        self.set_agent(agent)
-        self.set_tastes_set(tastes_set)
-        self.set_music_space(music_space)
-        self.set_score_matrix(score_matrix)
-        
-
         # env_type
+
         if (env_type == "sum_of_songvec"):
             # TODO figure out a reasonable value for
             # or way of calculating _threshold
             self._threshold = 0.9
             self._zero_good_bad_vec()
+
+        # gym properties
+
+        self.action_space = np.arrange(614) # creates an array {0,1,...,614} for each song 
+
+        self.observation_space = # Does this require a matrix of all users and songs and if they like the song or not?
+
+        # we could probably say (0,35)
+        self.reward_range = (-2.755e-05, 35)
+
 
     # getters and setters
         
@@ -123,5 +132,4 @@ class DJEnv():
         _ = None
 
         return( obs, reward, done, _ )
-
 
