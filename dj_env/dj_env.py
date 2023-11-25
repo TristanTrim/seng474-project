@@ -4,6 +4,9 @@
 Implementation of env
 """
 import numpy as np
+import gym
+from gym import spaces
+
 from user_taste.user_taste import user_taste, MC_score_matrix
 from music_space.music_space import music_space
 from game_engine.game_engine import GameEngine
@@ -56,16 +59,20 @@ class DJEnv():
             # or way of calculating _threshold
             self._threshold = 0.9
             self._zero_good_bad_vec()
-            observation_space = self.get_sum_of_songvec()
+            action_shape = self._bad_songs_vec.shape
+            observation_shape = self.get_sum_of_songvec().shape
 
         # gym properties
 
-        self.action_space = np.arange(614) # creates an array {0,1,...,614} for each song 
+        self.action_space = spaces.Box(
+                    low=0, high=1,  # action 1 for song picked zero for all else ?
+                    shape=action_shape, dtype=np.float32)
 
-        self.observation_space = observation_space
+        self.observation_space = spaces.Box(
+                        low=-1, high=1, # -1 for not liked and 1 for liked ?
+                        shape=observation_shape, dtype=np.float32)
 
-        # we could probably say (0,35)
-        self.reward_range = (-2.755e-05, 35)
+        self.reward_range = (0, 35)
 
 
     # getters and setters
