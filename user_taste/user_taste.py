@@ -87,16 +87,19 @@ class MC_score_matrix(user_taste):
     and a key-index mapping
     '''
     
-    def __init__(self,path,solve=False):
+    def __init__(self,path,n_users=100,solve=False):
         super().__init__(path)
+        self.n_users = n_users
         self.index_dictionary = self.__get_index_dictionary()
+        
         
         if solve:
             self.__init_score_matrix(path)
             self.score_matrix = self.__MC_solve(path)
         
         else:
-            self.score_matrix = np.load(path+'completed_score_matrix.npy')
+            #self.score_matrix = np.load(path+'small_score_matrix.npy')
+            self.__init_score_matrix(path)
         
     def limit_ind_dict_to_sco_mat(self):
         kv = list(self.index_dictionary.items())
@@ -129,8 +132,8 @@ class MC_score_matrix(user_taste):
             
             
         # matrix will be indexed lexographically, rowwise by user, columwise by song
-        user_count = len(self.get_all_users())
-        song_count = len(self.get_all_songs())    
+        user_count = self.n_users
+        song_count = self.get_all_songs().shape[0]   
     
         self.score_matrix = np.zeros((user_count,song_count))
           
@@ -153,7 +156,7 @@ class MC_score_matrix(user_taste):
         create a dictionary that maps taste_dictionary (uid,sid) key values to score matrix indices (i,j)
         representing the rating of the jth song (sid) by the ith user (uid)
         '''
-        users = sorted(self.get_all_users())
+        users = sorted(self.get_all_users())[:self.n_users]
         songs = sorted(self.get_all_songs())
         
         indices = [(i,j) for i in range(len(users)) for j in range(len(songs))]
@@ -201,7 +204,7 @@ class MC_score_matrix(user_taste):
         # end = timeit.default_timer()
         
         print('Finished')
-        print(f'Runtime: {end-start}')
+        #print(f'Runtime: {end-start}')
         print(f'Status: {problem.status}')
         print(f'Objective: {problem.value}')
         
