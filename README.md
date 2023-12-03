@@ -2,12 +2,16 @@
 
 This is a machine learning project for the class Seng474. We intend to experiment with reinforcement learning on the problem of predicting songs a user will like based only on their reaction to the already recommended songs.
 
+### Status: Abandoned
+
+We didn't get this working because INNER JOIN is too difficult :(
+
 ### Todo
 
 - [x] Get the data
 - [x] Write the env
-- [ ] Train the robot
-- [ ] Interpretability?
+- [ ] ~~Train the agents~~
+- [ ] ~~Interpretability?~~
 
 ### Setup
 
