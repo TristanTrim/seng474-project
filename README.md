@@ -4,7 +4,7 @@ This is a machine learning project for the class Seng474. We intend to experimen
 
 ### Status: Abandoned
 
-We didn't get this working because INNER JOIN is too difficult :(
+We never ended up getting the modules working together well enough to use the environment to train an agent.
 
 ### Todo
 
